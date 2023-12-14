@@ -1,0 +1,129 @@
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <bits/stdc++.h>
+
+using namespace std;
+
+class MinimumCostPath {
+private:
+    int row;
+    int column;
+    vector<vector<int>> cost;
+    string traceback;
+
+public:
+
+    void traceBack(vector<vector<int>> matrix,int row,int column){
+        traceback = to_string(matrix[row-1][column-1]);
+        for(int i=row-1;i>=1;){
+            for(int j=column-1;j>=1;){
+                int temp=min(matrix[i-1][j],matrix[i][j-1]);
+                if(temp>matrix[i-1][j-1]){
+                    traceback.append("->"+to_string(matrix[i-1][j-1]));
+                    i--;
+                    j--;
+                }
+                else{
+                    traceback.append("->"+to_string(temp));
+                    if(matrix[i-1][j]<matrix[i][j-1]){
+                        i--;
+                    }
+                    else{
+                        j--;
+                    }
+                }
+            }
+        }
+    }
+
+    MinimumCostPath() {
+        cout << "Enter the row of matrix : ";
+        cin >> row;
+        cout << "Enter the column of matrix : ";
+        cin >> column;
+        cost.resize(row, vector<int>(column, 0));
+
+        cout << "\n ENTER COST MATRIX : \n";
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                cout << "(" << i + 1 << "," << j + 1 << ") : ";
+                cin >> cost[i][j];
+            }
+        }
+    }
+
+    void getCostMatrix() {
+        cout<<"\n THE COST MATRIX IS : \n";
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+                cout << cost[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+
+    int getRow() {
+        return row;
+    }
+
+    int getColumn() {
+        return column;
+    }
+
+    int minimumCost();
+
+    string getTraceback() {
+        return traceback;
+    }
+    
+  void print(const vector<vector<int>>& matrix, int row, int column) {
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < column; j++) {
+            cout << matrix[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+};
+
+int MinimumCostPath::minimumCost() {
+    vector<vector<int>> minimumcost(row, vector<int>(column, 0));
+    minimumcost[0][0] = cost[0][0];
+
+    for (int i = 1; i < row; i++) {
+        minimumcost[i][0] = minimumcost[i - 1][0] + cost[i][0];
+    }
+
+    for (int j = 1; j < column; j++) {
+        minimumcost[0][j] = minimumcost[0][j - 1] + cost[0][j];
+    }
+
+    for (int i = 1; i < row; i++) {
+        for (int j = 1; j < column; j++) {
+            int temp = min(minimumcost[i - 1][j], minimumcost[i][j - 1]);
+            minimumcost[i][j] = min(minimumcost[i - 1][j - 1], temp) + cost[i][j];
+        }
+    }
+    
+    traceBack(minimumcost,row,column);
+    
+    cout<<"\n THE MINIMUM COST MATRIX IS : \n";
+    print(minimumcost,row,column);
+
+    return minimumcost[row - 1][column - 1];
+}
+
+int main() {
+    MinimumCostPath obj;
+    obj.getCostMatrix();
+    int minCost = obj.minimumCost();
+
+    cout << "Minimum Cost: " << minCost << endl;
+    cout << "Traceback Path: " << obj.getTraceback() << endl;
+
+    return 0;
+}
