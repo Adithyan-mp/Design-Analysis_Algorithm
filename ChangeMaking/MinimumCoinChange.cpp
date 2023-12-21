@@ -72,10 +72,10 @@ int CoinChangeMaking::minCoin() {
         int temp = INT_MAX;
         for (int j = 0; j < ndenomi; j++) {
             if (i >= denomi[j]) {
-                temp = min(temp, mincoin[i - denomi[j]]) + 1;
+                temp = min(temp, mincoin[i - denomi[j]]) ;
             }
         }
-        mincoin[i] = temp;
+        mincoin[i] = temp+1;
     }
 
     trace_back();
