@@ -94,7 +94,7 @@ void CoinChangeMaking::trace_back() {
             }
         }
         if (temp != INT_MAX) {
-            cointake.push_back(mincoinindex);
+            cointake.push_back(i-mincoinindex);
             i = mincoinindex;
         } else {
             // No valid denomination found, break the loop
@@ -103,13 +103,10 @@ void CoinChangeMaking::trace_back() {
     }
     
     // Print the selected denominations
-    std::cout<<"THE COINS TAKEN : ";
+    std::cout << "THE COINS TAKEN : ";
     for (int i = 0; i < cointake.size(); i++) {
-        if (cointake[i] == 0) {
-            std::cout << denomi[ndenomi - 1];
-        } else {
-            std::cout << cointake[i] << " ";
-        }
+        int j = cointake[i];  // Retrieve the index of the selected denomination
+        std::cout << j << " ";
     }
 }
 
@@ -120,7 +117,8 @@ int main() {
     std::cout << "Enter the amount of change: ";
     std::cin >> change;
     coinChange.putData(change);
-    int minCoins = coinChange.minCoin();
+    int minCoins=0;
+    minCoins = coinChange.minCoin();
     std::cout << "\n Minimum number of coins required: " << minCoins << std::endl;
 
     return 0;
